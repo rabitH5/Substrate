@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Substrate.Nbt;
+using org.bukkit;
+using org.apache.commons.lang;
+using org.bukkit.material;
 
 namespace Substrate
 {
@@ -211,7 +214,7 @@ namespace Substrate
     /// is up to date with the current MC version.  All unknown blocks are given a default type and unregistered status.
     /// New block types may be created and used at runtime, and will automatically populate various static lookup tables
     /// in the <see cref="BlockInfo"/> class.</remarks>
-    public class BlockInfo
+    public class BlockInfo : Material
     {
         /// <summary>
         /// The maximum number of sequential blocks starting at 0 that can be registered.
@@ -1008,7 +1011,269 @@ namespace Substrate
             Carpet.SetDataLimits(0, 15, 0);
             Dropper.SetDataLimits(0, 5, 0);
             Hopper.SetDataLimits(0, 5, 0);
+
+            // ------------------------------
+            // Custom setup
+            // ------------------------------
+
+            _isOpaqueTable = new bool[MAX_BLOCKS];
+
+            FinishBlockSetup();
         }
+
+        // -------------------------------------------------------------------------------------------------
+        // Bukkit implementation
+        // -------------------------------------------------------------------------------------------------
+
+        private static Dictionary<string, Material> BY_NAME = new Dictionary<string, Material>();
+        private int _maxStack;
+        private short _durability;
+        private bool _isEdible;
+        private bool _isFlammable;
+        private bool _isBurnable;
+        private bool _hasGravity;
+        private bool _isWalkable;
+        private bool _isPassable;
+        private bool _isTeleportable;
+        private bool _breakNaturally;
+
+        public int getId()
+        {
+            return _id;
+        }
+
+        public int getMaxStackSize()
+        {
+            return _maxStack;
+        }
+
+        public short getMaxDurability()
+        {
+            return _durability;
+        }
+
+        public MaterialData getData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public MaterialData getNewData(byte raw)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        public bool isBlock() { return true; }
+
+        public bool isEdible() { return _isEdible; }
+
+        public bool isSolid()
+        {
+
+            if (ID == BlockType.AIR)
+                return false;
+            if (State == BlockState.SOLID)
+                return true;
+            if (State == BlockState.FLUID || State == BlockState.NONSOLID)
+                return false;
+
+            return false;
+        }
+
+        public bool isLiquid()
+        {
+            if (State == BlockState.FLUID)
+                return true;
+            return false;
+        }
+
+        public bool isEmpty()
+        {
+            if (ID == BlockType.AIR)
+                return true;
+
+            return false;
+        }
+
+        public bool isTransparent()
+        {
+            return !isOccluding();
+        }
+
+        public bool isFlammable()
+        {
+            return _isFlammable;
+        }
+
+        public bool isBurnable()
+        {
+            return _isBurnable;
+        }
+
+        public bool isOccluding()
+        {
+            return _isOpaqueTable[ID];
+        }
+
+        public bool hasGravity() { return _hasGravity; }
+
+        public bool isWalkable() { return _isWalkable; }
+
+        public bool isPassable() { return _isPassable; }
+
+        public bool isTeleportable() { return _isTeleportable; }
+
+        public bool breakNaturally() { return _breakNaturally; }
+
+        public bool equals(int blockId)
+        {
+            if (ID == blockId)
+                return true;
+            return false;
+        }
+
+        public bool equals(Material material)
+        {
+            if (ID == material.getId())
+                return true;
+            return false;
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // Utilities
+        // -------------------------------------------------------------------------------------------------
+
+        public static BlockInfo getBlockInfo(int id)
+        {
+            if (id < MAX_BLOCKS && id >= 0)
+                return _blockTable[id];
+            else
+                return null;
+        }
+        public static BlockInfo getBlockInfoDirect(int id)
+        {
+            return _blockTable[id];
+
+        }
+
+        public static Material getMaterial(int id)
+        {
+            if (id < MAX_BLOCKS && id >= 0)
+                return _blockTable[id];
+            else
+                return null;
+        }
+
+        public static Material getMaterial(string name)
+        {
+            return BY_NAME[name];
+        }
+
+        public static Material matchMaterial(string name)
+        {
+            Validate.notNull(name, "Name cannot be null");
+
+            Material result = null;
+
+            try
+            {
+                result = getMaterial(Convert.ToInt32(name));
+            }
+            catch (System.FormatException ex) { }
+
+            if (result == null)
+            {
+                String filtered = name.ToUpper();
+
+                filtered = filtered.Replace("\\s+", "_").Replace("\\W", "");
+                result = BY_NAME[filtered];
+            }
+
+            return result;
+        }
+
+        public bool canBeReplacedByLeaves()
+        {
+            return isTransparent();
+        }
+
+        public bool isLeaves()
+        {
+            return this.ID == BlockType.LEAVES;
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // Setup
+        // -------------------------------------------------------------------------------------------------
+
+        public static string nullBlockName = "Unknown Block";
+        private static readonly bool[] _isOpaqueTable;
+
+        /// <summary>
+        /// Must be called whenever all the blocks have been defined.
+        /// </summary>
+        private static void FinishBlockSetup()
+        {
+
+            FillEmptyBlockData();
+            UpdateOpacityLookup();
+            UpdateNameLookup();
+        }
+
+        private static void FillEmptyBlockData()
+        {
+            for (int i = 0; i < MAX_BLOCKS; i++)
+            {
+                if (_blockTable[i] == null)
+                {
+                    _blockTable[i] = new BlockInfo(i);
+                }
+            }
+        }
+
+        private static void UpdateOpacityLookup()
+        {
+            for (int i = 0; i < MAX_BLOCKS; i++)
+            {
+                UpdateOpacityLookup(i);
+            }
+        }
+
+        private static void UpdateOpacityLookup(int blockId)
+        {
+            if (_blockTable[blockId].Opacity == BlockInfo.MAX_OPACITY)
+                _isOpaqueTable[blockId] = true;
+            else
+                _isOpaqueTable[blockId] = false;
+        }
+
+        private static void UpdateNameLookup()
+        {
+
+            for (int i = 0; i < MAX_BLOCKS; i++)
+            {
+                UpdateNameLookup(i);
+            }
+        }
+
+        private static void UpdateNameLookup(int blockId)
+        {
+
+            BlockInfo info = _blockTable[blockId];
+
+            if (info.Name == nullBlockName)
+                return;
+
+            string formatedName = info.Name.ToUpper();
+
+            if (BY_NAME.ContainsKey(formatedName))
+                BY_NAME[formatedName] = info;
+            else
+                BY_NAME.Add(formatedName, info);
+
+        }
+
+        // -------------------------------------------------------------------------------------------------
     }
 
     /// <summary>

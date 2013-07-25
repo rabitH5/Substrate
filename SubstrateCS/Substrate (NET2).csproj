@@ -59,6 +59,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\AlphaWorld.cs" />
@@ -284,6 +287,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Vendor\DotNetZip\Zlib\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Bukkit-csharp\Bukkit\Bukkit\Bukkit.csproj">
+      <Project>{27d1c9c8-dd3c-4351-9589-820e807dd757}</Project>
+      <Name>Bukkit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\jumpgate\JumpGate\JumpGate.csproj">
+      <Project>{ddea81ec-2291-4a8a-927b-11ccbd3f5cd1}</Project>
+      <Name>JumpGate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

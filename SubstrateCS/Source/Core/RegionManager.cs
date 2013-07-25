@@ -12,10 +12,11 @@ namespace Substrate.Core
     /// </summary>
     public abstract class RegionManager : IRegionManager
     {
+        [CLSCompliant(false)]
         protected string _regionPath;
-
+        [CLSCompliant(false)]
         protected Dictionary<RegionKey, IRegion> _cache;
-
+        [CLSCompliant(false)]
         protected ChunkCache _chunkCache;
 
 

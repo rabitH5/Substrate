@@ -49,6 +49,7 @@ namespace Substrate.Nbt
         public TagNode Parent
         {
             get { return _parent; }
+            set { _parent = value; }
         }
 
         /// <summary>

@@ -21,19 +21,20 @@ namespace Substrate.Core
         protected const int ZMASK = ZDIM - 1;
         protected const int XLOG = 5;
         protected const int ZLOG = 5;
-
+        [CLSCompliant(false)]
         protected int _rx;
+        [CLSCompliant(false)]
         protected int _rz;
         private bool _disposed = false;
-
+        [CLSCompliant(false)]
         protected RegionManager _regionMan;
 
         private static Regex _namePattern = new Regex("r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$");
 
         private WeakReference _regionFile;
-
+        [CLSCompliant(false)]
         protected ChunkCache _cache;
-
+       
         protected abstract IChunk CreateChunkCore (int cx, int cz);
 
         protected abstract IChunk CreateChunkVerifiedCore (NbtTree tree);
@@ -55,6 +56,7 @@ namespace Substrate.Core
         /// <summary>
         /// Gets the length of the X-dimension of the region in chunks.
         /// </summary>
+        [CLSCompliant(false)]
         public int XDim
         {
             get { return XDIM; }
@@ -63,6 +65,7 @@ namespace Substrate.Core
         /// <summary>
         /// Gets the length of the Z-dimension of the region in chunks.
         /// </summary>
+        [CLSCompliant(false)]
         public int ZDim
         {
             get { return ZDIM; }

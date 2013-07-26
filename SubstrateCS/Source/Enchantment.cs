@@ -142,5 +142,39 @@ namespace Substrate
         }
 
         #endregion
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        public override string ToString()
+        {
+            return "Enchantment (" + _id + " Level " + Level + ")";
+        }
+
+        public static bool operator ==(Enchantment a, Enchantment b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a._id == b._id &&
+                   a.Level == b.Level;
+        }
+
+        public static bool operator !=(Enchantment a, Enchantment b)
+        {
+            return !(a == b);
+        }
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

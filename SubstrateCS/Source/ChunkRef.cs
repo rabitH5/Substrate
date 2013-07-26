@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using Substrate.Core;
+using Substrate.Nbt;
 
 namespace Substrate
 {
@@ -11,7 +12,7 @@ namespace Substrate
     /// <remarks>
     /// Modifying data in a ChunkRef will signal to the chunk container that the physical chunk needs to be saved.
     /// </remarks>
-    public class ChunkRef : IChunk
+    public class ChunkRef : IChunk, org.bukkit.ChunkSnapshot
     {
         private IChunkContainer _container;
         private IChunk _chunk;
@@ -330,5 +331,87 @@ namespace Substrate
 
             return new BlockKey(x, ly, z);
         }
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        public NbtTree GetTree()
+        {
+            return _chunk.GetTree();
+        }
+
+        public void RebuildTree()
+        {
+            _chunk.RebuildTree();
+        }
+
+        public AnvilSection[] GetSections()
+        {
+            return _chunk.GetSections();
+        }
+
+        public AnvilSection GetSection(int y)
+        {
+            return _chunk.GetSection(y); ;
+        }
+
+        public bool IsSectionEmpty(int y)
+        {
+            return _chunk.IsSectionEmpty(y);
+        }
+
+        public bool IsSectionVisible(int sectionY)
+        {
+            return _chunk.IsSectionVisible(sectionY);
+        }
+
+        public void SetIsSectionVisible(int sectionY, bool visible)
+        {
+            _chunk.SetIsSectionVisible(sectionY, visible);
+        }
+
+        // ---------------------------------------------------------
+        // Bukkit
+        // ---------------------------------------------------------
+
+        public int getX()
+        {
+            return X;
+        }
+
+        public int getZ()
+        {
+            return Z;
+        }
+
+        // public String getWorldName();
+
+        public int getBlockTypeId(int x, int y, int z)
+        {
+            return Blocks.GetID(x, y, z);
+        }
+
+        public int getBlockData(int x, int y, int z)
+        {
+            return Blocks.GetData(x, y, z);
+        }
+
+        public int getBlockSkyLight(int x, int y, int z)
+        {
+            return Blocks.GetSkyLight(x, y, z);
+        }
+
+        public int getBlockEmittedLight(int x, int y, int z)
+        {
+            return Blocks.GetBlockLight(x, y, z);
+        }
+
+        public int getHighestBlockYAt(int x, int z)
+        {
+            return Blocks.GetHeight(x, z);
+        }
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

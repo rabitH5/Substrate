@@ -43,6 +43,8 @@ namespace Substrate
         private int _cz;
 
         private AnvilSection[] _sections;
+        private bool[] _isSectionEmpty; //> @rabitH5
+        private byte[] _isSectionVisible; //> @rabitH5
 
         private IDataArray3 _blocks;
         private IDataArray3 _data;
@@ -64,6 +66,21 @@ namespace Substrate
         private AnvilChunk ()
         {
             _sections = new AnvilSection[16];
+
+            //> @rabitH5
+            _isSectionEmpty = new bool[16];
+            _isSectionVisible = new byte[16];
+
+            for (int i = 0; i < _isSectionEmpty.Length; i++)
+            {
+                _isSectionEmpty[i] = true;
+            }
+
+            for (int i = 0; i < _isSectionVisible.Length; i++)
+            {
+                _isSectionVisible[i] = 1;
+            }
+            //< @rabitH5
         }
 
         public int X
@@ -267,6 +284,11 @@ namespace Substrate
                     for (int z = 0; z < ZDIM; z++)
                         _biomes[x, z] = BiomeType.Default;
             }
+            
+            //> @rabitH5
+            if (level.ContainsKey("Visible"))
+                _isSectionVisible = level["Visible"] as TagNodeByteArray;
+            //< @rabitH5
 
             _entities = level["Entities"] as TagNodeList;
             _tileEntities = level["TileEntities"] as TagNodeList;
@@ -413,6 +435,7 @@ namespace Substrate
             level.Add("Sections", sections);
             level.Add("HeightMap", heightMap);
             level.Add("Biomes", biomes);
+            level.Add("Visible", new TagNodeByteArray(_isSectionVisible));//> @rabitH5
             level.Add("Entities", _entities);
             level.Add("TileEntities", _tileEntities);
             level.Add("TileTicks", _tileTicks);
@@ -433,5 +456,73 @@ namespace Substrate
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return (int)((DateTime.UtcNow - epoch).Ticks / (10000L * 1000L));
         }
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        public NbtTree GetTree()
+        {
+            return _tree;
+        }
+
+
+        public void RebuildTree()
+        {
+            // BuildConditional();
+            // BuildTree();
+        }
+
+        public AnvilSection GetSectionAtBlockY(int blockY)
+        {
+            return GetSection(GetSectionNumberAtBlockY(blockY));
+        }
+
+
+        public static int GetSectionNumberAtBlockY(int blockY)
+        {
+            return (int)Math.Floor(blockY / 16f);
+        }
+
+        public AnvilSection GetSectionSafe(int y)
+        {
+            if (y < 0 || y > 15)
+                return _sections[0];
+
+            return GetSection(y);
+        }
+
+        public AnvilSection[] GetSections()
+        {
+            return _sections;
+        }
+
+        public AnvilSection GetSection(int y)
+        {
+            return _sections[y];
+        }
+
+        public bool IsSectionVisible(int sectionY)
+        {
+            return _isSectionVisible[sectionY] == 1 ? true : false;
+        }
+
+        public void SetIsSectionVisible(int sectionY, bool visible)
+        {
+            _isSectionVisible[sectionY] = (byte)(visible ? 1 : 0);
+        }
+
+        public bool IsSectionEmpty(int sectionY)
+        {
+            return _isSectionEmpty[sectionY];
+        }
+
+        private void OnNewBlock(int x, int y, int z)
+        {
+            // Hack for now...
+            _isSectionEmpty[GetSectionNumberAtBlockY(y)] = false;
+        }
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

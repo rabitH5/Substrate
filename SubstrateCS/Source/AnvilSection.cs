@@ -202,5 +202,14 @@ namespace Substrate
 
             _tree = tree;
         }
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+        public TagNodeCompound GetTree()
+        {
+            return _tree;
+        }
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

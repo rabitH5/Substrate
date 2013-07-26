@@ -245,11 +245,11 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void SetID (int x, int y, int z, int id)
+        public bool SetID(int x, int y, int z, int id)  //> @rabitH5 (return bool)
         {
             cache = GetChunk(x, y, z);
             if (cache == null || !Check(x, y, z)) {
-                return;
+                return false;  //> @rabitH5
             }
 
             bool autolight = cache.Blocks.AutoLight;
@@ -265,6 +265,8 @@ namespace Substrate
             cache.Blocks.AutoFluid = autofluid;
             cache.Blocks.AutoLight = autolight;
             cache.Blocks.AutoTileTick = autoTileTick;
+
+            return true;  //> @rabitH5
         }
 
         #endregion
@@ -592,5 +594,52 @@ namespace Substrate
         }
 
         #endregion
+
+        //> @rabitH5
+        // ---------------------------------------------------------------------------------------
+
+        // Get Local position from Global position
+        public int GetLocalX(int x)
+        {
+            return x & chunkXMask;
+        }
+        public int GetLocalY(int y)
+        {
+            return y & chunkYMask;
+        }
+        public int GetLocalZ(int z)
+        {
+            return z & chunkZMask;
+        }
+
+        // Get Global position from Local position
+
+        public int GetGlobalX(int cx, int x)
+        {
+            return (cx <<= chunkXLog) + x;
+        }
+        public int GetGlobalY(int y)
+        {
+            return y;
+        }
+        public int GetGlobalZ(int cz, int z)
+        {
+            return (cz <<= chunkZLog) + z;
+        }
+
+        // ChunkPos for a Global Block Position
+
+        public int GetChunkX(int x)
+        {
+            return x >>= chunkXLog;
+
+        }
+        public int GetChunkZ(int z)
+        {
+            return z >>= chunkZLog;
+        }
+
+        // ---------------------------------------------------------------------------------------
+        //< @rabitH5
     }
 }

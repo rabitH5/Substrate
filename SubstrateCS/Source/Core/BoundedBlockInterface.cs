@@ -74,7 +74,7 @@ namespace Substrate.Core
         /// <param name="y">The container-local Y-coordinate of a block.</param>
         /// <param name="z">The container-local Z-coordinate of a block.</param>
         /// <param name="id">The id (type) to assign to a block at the given coordinates.</param>
-        void SetID (int x, int y, int z, int id);
+        bool SetID(int x, int y, int z, int id); //> @rabitH5
 
         /// <summary>
         /// Gets info and attributes on a block's type within a bounded block container.

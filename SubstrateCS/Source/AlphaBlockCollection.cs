@@ -326,11 +326,11 @@ namespace Substrate
         /// for the affected block and possibly many other indirectly-affected blocks in the collection or neighboring
         /// collections.  If many SetID calls are expected to be made, some of this auto-reconciliation behavior should
         /// be disabled, and the data should be rebuilt at the <see cref="AlphaBlockCollection"/>-level at the end.</remarks>
-        public void SetID (int x, int y, int z, int id)
+        public bool SetID(int x, int y, int z, int id) //> @rabitH5 (return bool)
         {
             int oldid = _blocks[x, y, z];
             if (oldid == id) {
-                return;
+                return false; //> @rabitH5
             }
 
             // Update value
@@ -391,6 +391,8 @@ namespace Substrate
             }
 
             _dirty = true;
+
+            return true; //> @rabitH5
         }
 
         internal void SetID (int index, int id)

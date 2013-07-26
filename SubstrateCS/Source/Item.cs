@@ -217,5 +217,41 @@ namespace Substrate
         }
 
         #endregion
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        public override string ToString()
+        {
+            return "Item ( Id:" + _id + " Damage:" + _damage + " Count:" + _count + " Enchantments:" + _enchantments.Count + ")";
+        }
+
+        public static bool operator ==(Item a, Item b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a._id == b._id &&
+                   a._damage == b._damage &&
+                   a._enchantments.Count == 0 &&
+                   b.Enchantments.Count == 0;
+        }
+
+        public static bool operator !=(Item a, Item b)
+        {
+            return !(a == b);
+        }
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

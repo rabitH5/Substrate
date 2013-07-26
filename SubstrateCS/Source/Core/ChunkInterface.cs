@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Substrate.Nbt;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -49,6 +50,26 @@ namespace Substrate.Core
         /// <param name="outStream">A valid, open output stream.</param>
         /// <returns>True if the chunk could be saved; false otherwise.</returns>
         bool Save (Stream outStream);
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        NbtTree GetTree();
+
+        void RebuildTree();
+
+        AnvilSection[] GetSections();
+
+        AnvilSection GetSection(int y);
+
+        bool IsSectionEmpty(int y);
+
+        bool IsSectionVisible(int sectionY);
+
+        void SetIsSectionVisible(int sectionY, bool visible);
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 
     /// <summary>

@@ -415,5 +415,44 @@ namespace Substrate
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return (int)((DateTime.UtcNow - epoch).Ticks / (10000L * 1000L));
         }
+
+        //> @rabitH5
+        // ---------------------------------------------------------
+
+        public NbtTree GetTree()
+        {
+            return _tree;
+        }
+
+        public void RebuildTree()
+        {
+        }
+
+        public AnvilSection[] GetSections()
+        {
+            return null;
+        }
+
+        public AnvilSection GetSection(int y)
+        {
+            return null;
+        }
+
+        public bool IsSectionEmpty(int y)
+        {
+            return false;
+        }
+
+        public bool IsSectionVisible(int sectionY)
+        {
+            return false;
+        }
+
+        public void SetIsSectionVisible(int sectionY, bool visible)
+        {
+        }
+
+        // ---------------------------------------------------------
+        //< @rabitH5
     }
 }

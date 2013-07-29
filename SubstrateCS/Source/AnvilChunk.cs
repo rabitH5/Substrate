@@ -227,7 +227,6 @@ namespace Substrate
             tree.Root["Level"] = BuildTree();
 
             tree.WriteTo(outStream);
-            outStream.Close();
 
             return true;
         }

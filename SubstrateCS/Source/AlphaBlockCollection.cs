@@ -889,11 +889,11 @@ namespace Substrate
 
             int blocktype = _blocks[x, y, z];
 
-            if (blocktype == BlockInfo.Water.ID || blocktype == BlockInfo.StationaryWater.ID) {
+            if (blocktype == McBlocks.Water.ID || blocktype == McBlocks.StationaryWater.ID) {
                 _fluidManager.UpdateWater(x, y, z);
                 _dirty = true;
             }
-            else if (blocktype == BlockInfo.Lava.ID || blocktype == BlockInfo.StationaryLava.ID) {
+            else if (blocktype == McBlocks.Lava.ID || blocktype == McBlocks.StationaryLava.ID) {
                 _fluidManager.UpdateLava(x, y, z);
                 _dirty = true;
             }

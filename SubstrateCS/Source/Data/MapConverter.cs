@@ -58,32 +58,32 @@ namespace Substrate.Data
                 _blockIndex[i] = ColorGroup.Other;
             }
 
-            _blockIndex[BlockInfo.Grass.ID] = ColorGroup.Grass;
-            _blockIndex[BlockInfo.TallGrass.ID] = ColorGroup.Grass;
-            _blockIndex[BlockInfo.Sand.ID] = ColorGroup.Sand;
-            _blockIndex[BlockInfo.Gravel.ID] = ColorGroup.Sand;
-            _blockIndex[BlockInfo.Sandstone.ID] = ColorGroup.Sand;
-            _blockIndex[BlockInfo.Lava.ID] = ColorGroup.Lava;
-            _blockIndex[BlockInfo.StationaryLava.ID] = ColorGroup.Lava;
-            _blockIndex[BlockInfo.Ice.ID] = ColorGroup.Ice;
-            _blockIndex[BlockInfo.Leaves.ID] = ColorGroup.Leaves;
-            _blockIndex[BlockInfo.YellowFlower.ID] = ColorGroup.Leaves;
-            _blockIndex[BlockInfo.RedRose.ID] = ColorGroup.Leaves;
-            _blockIndex[BlockInfo.Snow.ID] = ColorGroup.Snow;
-            _blockIndex[BlockInfo.SnowBlock.ID] = ColorGroup.Snow;
-            _blockIndex[BlockInfo.ClayBlock.ID] = ColorGroup.Clay;
-            _blockIndex[BlockInfo.Dirt.ID] = ColorGroup.Dirt;
-            _blockIndex[BlockInfo.Stone.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.Cobblestone.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.CoalOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.IronOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.GoldOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.DiamondOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.RedstoneOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.LapisOre.ID] = ColorGroup.Stone;
-            _blockIndex[BlockInfo.Water.ID] = ColorGroup.Water;
-            _blockIndex[BlockInfo.StationaryWater.ID] = ColorGroup.Water;
-            _blockIndex[BlockInfo.Wood.ID] = ColorGroup.Wood;
+            _blockIndex[McBlocks.Grass.ID] = ColorGroup.Grass;
+            _blockIndex[McBlocks.TallGrass.ID] = ColorGroup.Grass;
+            _blockIndex[McBlocks.Sand.ID] = ColorGroup.Sand;
+            _blockIndex[McBlocks.Gravel.ID] = ColorGroup.Sand;
+            _blockIndex[McBlocks.Sandstone.ID] = ColorGroup.Sand;
+            _blockIndex[McBlocks.Lava.ID] = ColorGroup.Lava;
+            _blockIndex[McBlocks.StationaryLava.ID] = ColorGroup.Lava;
+            _blockIndex[McBlocks.Ice.ID] = ColorGroup.Ice;
+            _blockIndex[McBlocks.Leaves.ID] = ColorGroup.Leaves;
+            _blockIndex[McBlocks.YellowFlower.ID] = ColorGroup.Leaves;
+            _blockIndex[McBlocks.RedRose.ID] = ColorGroup.Leaves;
+            _blockIndex[McBlocks.Snow.ID] = ColorGroup.Snow;
+            _blockIndex[McBlocks.SnowBlock.ID] = ColorGroup.Snow;
+            _blockIndex[McBlocks.ClayBlock.ID] = ColorGroup.Clay;
+            _blockIndex[McBlocks.Dirt.ID] = ColorGroup.Dirt;
+            _blockIndex[McBlocks.Stone.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.Cobblestone.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.CoalOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.IronOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.GoldOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.DiamondOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.RedstoneOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.LapisOre.ID] = ColorGroup.Stone;
+            _blockIndex[McBlocks.Water.ID] = ColorGroup.Water;
+            _blockIndex[McBlocks.StationaryWater.ID] = ColorGroup.Water;
+            _blockIndex[McBlocks.Wood.ID] = ColorGroup.Wood;
         }
 
         /// <summary>

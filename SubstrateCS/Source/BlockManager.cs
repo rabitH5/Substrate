@@ -594,52 +594,6 @@ namespace Substrate
         }
 
         #endregion
-
-        //> @rabitH5
-        // ---------------------------------------------------------------------------------------
-
-        // Get Local position from Global position
-        public int GetLocalX(int x)
-        {
-            return x & chunkXMask;
-        }
-        public int GetLocalY(int y)
-        {
-            return y & chunkYMask;
-        }
-        public int GetLocalZ(int z)
-        {
-            return z & chunkZMask;
-        }
-
-        // Get Global position from Local position
-
-        public int GetGlobalX(int cx, int x)
-        {
-            return (cx <<= chunkXLog) + x;
-        }
-        public int GetGlobalY(int y)
-        {
-            return y;
-        }
-        public int GetGlobalZ(int cz, int z)
-        {
-            return (cz <<= chunkZLog) + z;
-        }
-
-        // ChunkPos for a Global Block Position
-
-        public int GetChunkX(int x)
-        {
-            return x >>= chunkXLog;
-
-        }
-        public int GetChunkZ(int z)
-        {
-            return z >>= chunkZLog;
-        }
-
-        // ---------------------------------------------------------------------------------------
-        //< @rabitH5
+		
     }
 }

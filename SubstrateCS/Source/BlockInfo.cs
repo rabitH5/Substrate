@@ -399,6 +399,17 @@ namespace Substrate
         private bool _isTeleportable;
         private bool _breakNaturally;
 
+
+        public void SetName(string newName)
+        {
+            _name = newName;
+        }
+
+        public void SetTransmitsLight(bool transmitLight )
+        {
+            _transmitLight = transmitLight;
+        }
+
         public int getId()
         {
             return _id;

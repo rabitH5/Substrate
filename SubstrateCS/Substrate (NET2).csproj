@@ -58,7 +58,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -90,7 +89,6 @@
     <Compile Include="Source\Core\UnboundedBlockInterface.cs" />
     <Compile Include="Source\Data\DataManager.cs" />
     <Compile Include="Source\Data\Map.cs" />
-    <Compile Include="Source\Data\MapConverter.cs" />
     <Compile Include="Source\Data\MapManager.cs" />
     <Compile Include="Source\Data\MapManagerInterface.cs" />
     <Compile Include="Source\Enchantment.cs" />

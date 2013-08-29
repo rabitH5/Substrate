@@ -74,6 +74,7 @@
     <Compile Include="Source\Core\CompositeDataArray.cs" />
     <Compile Include="Source\Core\FusedDataArray.cs" />
     <Compile Include="Source\McBlocks.cs" />
+    <Compile Include="Source\McItems.cs" />
     <Compile Include="Source\RegionChunkManager.cs" />
     <Compile Include="Source\BetaRegion.cs" />
     <Compile Include="Source\BetaWorld.cs" />

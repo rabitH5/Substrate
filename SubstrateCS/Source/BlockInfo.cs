@@ -83,7 +83,7 @@ namespace Substrate
             }
         }
 
-        private class DataLimits
+        public class DataLimits
         {
             private int _low;
             private int _high;
@@ -124,12 +124,12 @@ namespace Substrate
         private int _opacity = MAX_OPACITY;
         private int _luminance = MIN_LUMINANCE;
         private bool _transmitLight = false;
-        private bool _blocksFluid = true;
+        private bool _stopFluid = true;
         private bool _registered = false;
 
         private BlockState _state = BlockState.SOLID;
 
-        private DataLimits _dataLimits;
+        private DataLimits _dataLimits = new DataLimits(0,0,0);
 
         private static CacheTableArray<BlockInfo> _blockTableCache; //> @rabitH5  readonly
         private static CacheTableArray<int> _opacityTableCache; //> @rabitH5  readonly
@@ -165,6 +165,16 @@ namespace Substrate
         public int ID
         {
             get { return _id; }
+            set
+            {
+                if (OnIdChange != null) {
+                    OnIdChange(_id, value);
+                }
+
+                _id = value;
+                _blockTable[_id] = this;
+                _dropId = _id;
+            }
         }
 
         /// <summary>
@@ -173,6 +183,15 @@ namespace Substrate
         public string Name
         {
             get { return _name; }
+            set
+            {
+                _name = value;
+                _registered = true;
+                UpdateNameLookup(_id);
+
+                if (OnNameChange != null)
+                    OnNameChange(_id, _name);
+            }
         }
 
         /// <summary>
@@ -181,6 +200,7 @@ namespace Substrate
         public int Opacity
         {
             get { return _opacity; }
+            set { SetOpacity(value); }
         }
 
         /// <summary>
@@ -190,6 +210,7 @@ namespace Substrate
         public int Luminance
         {
             get { return _luminance; }
+            set { SetLuminance(value); }
         }
 
         /// <summary>
@@ -199,6 +220,7 @@ namespace Substrate
         public bool TransmitsLight
         {
             get { return _transmitLight; }
+            set { SetLightTransmission(value); }
         }
 
         /// <summary>
@@ -213,9 +235,10 @@ namespace Substrate
         /// Checks whether the block stops fluid from passing through it.
         /// </summary>
         /// <remarks>A block that does not block fluids will be destroyed by fluid.</remarks>
-        public bool BlocksFluid
+        public bool StopFluid
         {
-            get { return _blocksFluid; }
+            get { return _stopFluid; }
+            set { SetBlocksFluid(value); }
         }
 
         /// <summary>
@@ -224,6 +247,13 @@ namespace Substrate
         public BlockState State
         {
             get { return _state; }
+            set { SetState(value); }
+        }
+
+        public DataLimits Data
+        {
+            get { return _dataLimits; }
+            set { _dataLimits = value; }
         }
 
         /// <summary>
@@ -232,18 +262,23 @@ namespace Substrate
         public bool Registered
         {
             get { return _registered; }
+            set { _registered = value; }
         }
 
         public int Tick
         {
             get { return _tick; }
+            set { SetTick(value); }
         }
 
-        internal BlockInfo(int id)
+        public BlockInfo()
         {
-            _id = id;
+        }
+
+        public BlockInfo(int id)
+        {
             _name = "Unknown Block";
-            _blockTable[_id] = this;
+            ID = id;
         }
 
         /// <summary>
@@ -254,10 +289,8 @@ namespace Substrate
         /// <remarks>All user-constructed <see cref="BlockInfo"/> objects are registered automatically.</remarks>
         public BlockInfo(int id, string name)
         {
-            _id = id;
-            _name = name;
-            _blockTable[_id] = this;
-            _registered = true;
+            ID = id;
+            Name = name;
         }
 
         /// <summary>
@@ -270,7 +303,7 @@ namespace Substrate
         {
             _opacity = MIN_OPACITY + opacity;
             _opacityTable[_id] = _opacity;
-
+            /*
             if (opacity == MAX_OPACITY)
             {
                 _transmitLight = false;
@@ -278,7 +311,9 @@ namespace Substrate
             else
             {
                 _transmitLight = true;
-            }
+            }*/
+
+            UpdateOpacityLookup(_id);
 
             return this;
         }
@@ -330,14 +365,14 @@ namespace Substrate
         {
             _state = state;
 
-            if (_state == BlockState.SOLID)
-            {
-                _blocksFluid = true;
-            }
-            else
-            {
-                _blocksFluid = false;
-            }
+            /* if (_state == BlockState.SOLID)
+             {
+                 _blocksFluid = true;
+             }
+             else
+             {
+                 _blocksFluid = false;
+             }*/
 
             return this;
         }
@@ -350,7 +385,7 @@ namespace Substrate
         /// <seealso cref="AlphaBlockCollection.AutoFluid"/>
         public BlockInfo SetBlocksFluid(bool blocks)
         {
-            _blocksFluid = blocks;
+            _stopFluid = blocks;
             return this;
         }
 
@@ -383,32 +418,142 @@ namespace Substrate
         }
 
         //> @rabitH5
+
+
+        public static System.Action<int,string> OnNameChange;
+        public static System.Action<int, int> OnIdChange;
+
+        // -------------------------------------------------------------------------------------------------
+        // Bukkit values
+        // -------------------------------------------------------------------------------------------------
+
+        private int _maxStack = 50;
+        private short _durability = 100;
+        private bool _isEdible = false;
+        private bool _isFlammable= false;
+        private bool _isBurnable= false;
+        private bool _hasGravity = true;
+        private bool _isWalkable = true;
+        private bool _isPassable = true;
+        private bool _isTeleportable = true;
+        private bool _breakNaturally = false;
+
+        public int MaxStack
+        {
+            get { return _maxStack; }
+            set { _maxStack = value; }
+        }
+
+        public short Durability
+        {
+            get { return _durability; }
+            set { _durability = value; }
+        }
+
+        public bool IsEdible
+        {
+            get { return _isEdible; }
+            set { _isEdible = value; }
+        }
+
+        public bool IsFlammable
+        {
+            get { return _isFlammable; }
+            set { _isFlammable = value; }
+        }
+        public bool IsBurnable
+        {
+            get { return _isBurnable; }
+            set { _isBurnable = value; }
+        }
+        public bool HasGravity
+        {
+            get { return _hasGravity; }
+            set { _hasGravity = value; }
+        }
+        public bool IsWalkable
+        {
+            get { return _isWalkable; }
+            set { _isWalkable = value; }
+        }
+        public bool IsPassable
+        {
+            get { return _isPassable; }
+            set { _isPassable = value; }
+        }
+        public bool IsTeleportable
+        {
+            get { return _isTeleportable; }
+            set { _isTeleportable = value; }
+        }
+        public bool BreakNaturally
+        {
+            get { return _breakNaturally; }
+            set { _breakNaturally = value; }
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // Bukkit values
+        // -------------------------------------------------------------------------------------------------
+
+        private GeometryType _geometryType = GeometryType.Cube;
+        private int _hitPoints = 100;
+        private bool _dropItems = false;
+        private PropType _dropType = PropType.Block;
+        private int _dropId = 0;
+        private int _dropChance = 100;
+
+        public GeometryType Geometry
+        {
+            get { return _geometryType; }
+            set { _geometryType = value; }
+        }
+
+        public int HitPoints
+        {
+            get { return _hitPoints; }
+            set { _hitPoints = value; }
+        }
+
+        public bool DropItems
+        {
+            get { return _dropItems; }
+            set { _dropItems = value; }
+        }
+
+        public PropType DropType
+        {
+            get { return _dropType; }
+            set { _dropType = value; }
+        }
+
+        public int DropId
+        {
+            get { return _dropId; }
+            set {
+                int newValue = value;
+
+                if (newValue < 0)
+                    newValue = 0;
+
+                if (newValue > 100)
+                    newValue = 100;
+
+                    _dropId = newValue;
+            }
+        }
+
+        public int DropChance
+        {
+            get { return _dropChance; }
+            set { _dropChance = value; }
+        }
+
         // -------------------------------------------------------------------------------------------------
         // Bukkit implementation
         // -------------------------------------------------------------------------------------------------
 
         private static Dictionary<string, Material> BY_NAME = new Dictionary<string, Material>();
-        private int _maxStack;
-        private short _durability;
-        private bool _isEdible;
-        private bool _isFlammable;
-        private bool _isBurnable;
-        private bool _hasGravity;
-        private bool _isWalkable;
-        private bool _isPassable;
-        private bool _isTeleportable;
-        private bool _breakNaturally;
-
-
-        public void SetName(string newName)
-        {
-            _name = newName;
-        }
-
-        public void SetTransmitsLight(bool transmitLight )
-        {
-            _transmitLight = transmitLight;
-        }
 
         public int getId()
         {
@@ -432,7 +577,6 @@ namespace Substrate
 
         public MaterialData getNewData(byte raw)
         {
-
             throw new NotImplementedException();
         }
 
@@ -442,7 +586,6 @@ namespace Substrate
 
         public bool isSolid()
         {
-
             if (ID == BlockType.AIR)
                 return false;
             if (State == BlockState.SOLID)
@@ -513,26 +656,6 @@ namespace Substrate
         }
 
         // -------------------------------------------------------------------------------------------------
-        // Other values
-        // -------------------------------------------------------------------------------------------------
-
-        private int _hitPoints;
-        private bool _dropItems;
-
-        public void SetHitPoints(int hitPoints)
-        {
-            _hitPoints = hitPoints;
-        }
-
-        public void SetDropItems(bool dropItems)
-        {
-            _dropItems = dropItems;
-        }
-
-        public int GetHitPoints() { return _hitPoints; }
-        public bool DropItems() { return _dropItems; }
-
-        // -------------------------------------------------------------------------------------------------
         // Utilities
         // -------------------------------------------------------------------------------------------------
 
@@ -543,10 +666,15 @@ namespace Substrate
             else
                 return null;
         }
+
+        public static bool IsRegistred(int id)
+        {
+            return _blockTable[id].Registered;
+        }
+
         public static BlockInfo getBlockInfoDirect(int id)
         {
             return _blockTable[id];
-
         }
 
         public static Material getMaterial(int id)
@@ -595,6 +723,31 @@ namespace Substrate
             return this.ID == BlockType.LEAVES;
         }
 
+        public static int FindNextAvailableId(int min, int max)
+        {
+            if (min < 0 || min > MAX_BLOCKS) min = 0;
+            if (max < 0 || max > MAX_BLOCKS) max = MAX_BLOCKS;
+
+            for (int i = min; i <= max; i++)
+            {
+                if (!_blockTable[i].Registered)
+                    return i;
+            }
+            return -1;
+        }
+
+        public static void AddBlock(int id, string name)
+        {
+            _blockTable[id] = new BlockInfo(id, name);
+            UpdateLookups();
+        }
+
+        public static void RemoveBlock(int id)
+        {
+            _blockTable[id] = new BlockInfo(id);
+            UpdateLookups();
+        }
+
         // -------------------------------------------------------------------------------------------------
         // Setup
         // -------------------------------------------------------------------------------------------------
@@ -636,8 +789,8 @@ namespace Substrate
             }
 
             FillEmptyBlockData();
-            UpdateOpacityLookup();
-            UpdateNameLookup();
+
+            UpdateLookups();
         }
 
         private static void FillEmptyBlockData()
@@ -649,6 +802,13 @@ namespace Substrate
                     _blockTable[i] = new BlockInfo(i);
                 }
             }
+        }
+
+
+        private static void UpdateLookups()
+        {
+            UpdateOpacityLookup();
+            UpdateNameLookup();
         }
 
         private static void UpdateOpacityLookup()
@@ -692,10 +852,20 @@ namespace Substrate
                 BY_NAME.Add(formatedName, info);
 
         }
-
-        // -------------------------------------------------------------------------------------------------
-        //< @rabitH5
     }
+
+    public enum GeometryType : byte
+    {
+        None,
+        Cube,
+        Slab,
+        X,
+        Crust,
+        Liquid
+    }
+
+    // -------------------------------------------------------------------------------------------------
+    //< @rabitH5
 
     /// <summary>
     /// An extended <see cref="BlockInfo"/> that includes <see cref="TileEntity"/> information.

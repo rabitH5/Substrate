@@ -231,7 +231,7 @@ namespace Substrate.Core
                 if (distance > 0) {
                     // Ignore blocks that block fluid (and thus could not become a fluid)
                     BlockInfo branchHighInfo = branchHigh.chunk.GetInfo(branchHigh.lx, branchHigh.ly, branchHigh.lz);
-                    if (branchHighInfo.BlocksFluid) {
+                    if (branchHighInfo.StopFluid) {
                         markTable.Remove(branch);
                         continue;
                     }
@@ -240,7 +240,7 @@ namespace Substrate.Core
                 // If we found a hole, add as a sink, mark the sink distance.
                 BlockCoord branchLow = TranslateCoord(branch.x, branch.y - 1, branch.z);
                 BlockInfo branchLowInfo = branchLow.chunk.GetInfo(branchLow.lx, branchLow.ly, branchLow.lz);
-                if (!branchLowInfo.BlocksFluid) {
+                if (!branchLowInfo.StopFluid) {
                     // If we are our own sink, return the only legal outflow
                     if (key == branch) {
                         List<BlockKey> ret = new List<BlockKey>();
@@ -373,7 +373,7 @@ namespace Substrate.Core
                         BlockCoord low = TranslateCoord(keys[i].x, keys[i].y - 1, keys[i].z);
                         BlockInfo lowinfo = low.chunk.GetInfo(low.lx, low.ly, low.lz);
 
-                        if (lowinfo.BlocksFluid) {
+                        if (lowinfo.StopFluid) {
                             return 0;
                         }
                         continue;
@@ -410,7 +410,7 @@ namespace Substrate.Core
                 if (tileInfo.ID == McBlocks.StationaryWater.ID || tileInfo.ID == McBlocks.Water.ID) {
                     curflow = tile.chunk.GetData(tile.lx, tile.ly, tile.lz);
                 }
-                else if (tileInfo.BlocksFluid) {
+                else if (tileInfo.StopFluid) {
                     continue;
                 }
 
@@ -501,7 +501,7 @@ namespace Substrate.Core
                 if (tileInfo.ID == McBlocks.StationaryLava.ID || tileInfo.ID == McBlocks.Lava.ID) {
                     curflow = tile.chunk.GetData(tile.lx, tile.ly, tile.lz);
                 }
-                else if (tileInfo.BlocksFluid) {
+                else if (tileInfo.StopFluid) {
                     continue;
                 }
 

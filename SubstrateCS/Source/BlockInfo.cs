@@ -4,6 +4,8 @@ using Substrate.Nbt;
 using org.apache.commons.lang;
 using org.bukkit.material;
 using org.bukkit;
+using Klokkit;
+using JumpGate;
 
 namespace Substrate
 {
@@ -17,17 +19,17 @@ namespace Substrate
         /// <summary>
         /// A solid state that stops movement.
         /// </summary>
-        SOLID,
+        Solid,
 
         /// <summary>
         /// A nonsolid state that can be passed through.
         /// </summary>
-        NONSOLID,
+        Non_Solid,
 
         /// <summary>
         /// A fluid state that flows and impedes movement.
         /// </summary>
-        FLUID
+        Fluid
     }
 
     /// <summary>
@@ -127,9 +129,9 @@ namespace Substrate
         private bool _stopFluid = true;
         private bool _registered = false;
 
-        private BlockState _state = BlockState.SOLID;
+        private BlockState _state = BlockState.Solid;
 
-        private DataLimits _dataLimits = new DataLimits(0,0,0);
+        private DataLimits _dataLimits = new DataLimits(0, 0, 0);
 
         private static CacheTableArray<BlockInfo> _blockTableCache; //> @rabitH5  readonly
         private static CacheTableArray<int> _opacityTableCache; //> @rabitH5  readonly
@@ -167,7 +169,8 @@ namespace Substrate
             get { return _id; }
             set
             {
-                if (OnIdChange != null) {
+                if (OnIdChange != null)
+                {
                     OnIdChange(_id, value);
                 }
 
@@ -420,7 +423,7 @@ namespace Substrate
         //> @rabitH5
 
 
-        public static System.Action<int,string> OnNameChange;
+        public static System.Action<int, string> OnNameChange;
         public static System.Action<int, int> OnIdChange;
 
         // -------------------------------------------------------------------------------------------------
@@ -430,8 +433,8 @@ namespace Substrate
         private int _maxStack = 50;
         private short _durability = 100;
         private bool _isEdible = false;
-        private bool _isFlammable= false;
-        private bool _isBurnable= false;
+        private bool _isFlammable = false;
+        private bool _isBurnable = false;
         private bool _hasGravity = true;
         private bool _isWalkable = true;
         private bool _isPassable = true;
@@ -450,42 +453,49 @@ namespace Substrate
             set { _durability = value; }
         }
 
+        [CLSCompliant(false)]
         public bool IsEdible
         {
             get { return _isEdible; }
             set { _isEdible = value; }
         }
-
+        [CLSCompliant(false)]
         public bool IsFlammable
         {
             get { return _isFlammable; }
             set { _isFlammable = value; }
         }
+        [CLSCompliant(false)]
         public bool IsBurnable
         {
             get { return _isBurnable; }
             set { _isBurnable = value; }
         }
+        [CLSCompliant(false)]
         public bool HasGravity
         {
             get { return _hasGravity; }
             set { _hasGravity = value; }
         }
+        [CLSCompliant(false)]
         public bool IsWalkable
         {
             get { return _isWalkable; }
             set { _isWalkable = value; }
         }
+        [CLSCompliant(false)]
         public bool IsPassable
         {
             get { return _isPassable; }
             set { _isPassable = value; }
         }
+        [CLSCompliant(false)]
         public bool IsTeleportable
         {
             get { return _isTeleportable; }
             set { _isTeleportable = value; }
         }
+        [CLSCompliant(false)]
         public bool BreakNaturally
         {
             get { return _breakNaturally; }
@@ -493,21 +503,73 @@ namespace Substrate
         }
 
         // -------------------------------------------------------------------------------------------------
-        // Bukkit values
+        // Geometry values
         // -------------------------------------------------------------------------------------------------
 
         private GeometryType _geometryType = GeometryType.Cube;
-        private int _hitPoints = 100;
-        private bool _dropItems = false;
-        private PropType _dropType = PropType.Block;
-        private int _dropId = 0;
-        private int _dropChance = 100;
+        private AtlasType _atlas = AtlasType.Solid;
+        // Cube
+        private short _front = 0;
+        private short _back = 0;
+        private short _right = 0;
+        private short _left = 0;
+        private short _top = 0;
+        private short _bottom = 0;
 
+        [CLSCompliant(false)]
         public GeometryType Geometry
         {
             get { return _geometryType; }
             set { _geometryType = value; }
         }
+
+        [CLSCompliant(false)]
+        public AtlasType Atlas
+        {
+            get { return _atlas; }
+            set { _atlas = value; }
+        }
+
+        public short Front
+        {
+            get { return _front; }
+            set { _front = value; }
+        }
+        public short Back
+        {
+            get { return _back; }
+            set { _back = value; }
+        }
+        public short Right
+        {
+            get { return _right; }
+            set { _right = value; }
+        }
+        public short Left
+        {
+            get { return _left; }
+            set { _left = value; }
+        }
+        public short Top
+        {
+            get { return _top; }
+            set { _top = value; }
+        }
+        public short Bottom
+        {
+            get { return _bottom; }
+            set { _bottom = value; }
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // Klokkit values
+        // -------------------------------------------------------------------------------------------------
+
+        private int _hitPoints = 100;
+        private bool _dropItems = false;
+        private PropType _dropType = PropType.Block;
+        private int _dropId = 0;
+        private int _dropChance = 100;
 
         public int HitPoints
         {
@@ -521,6 +583,7 @@ namespace Substrate
             set { _dropItems = value; }
         }
 
+        [CLSCompliant(false)]
         public PropType DropType
         {
             get { return _dropType; }
@@ -530,7 +593,8 @@ namespace Substrate
         public int DropId
         {
             get { return _dropId; }
-            set {
+            set
+            {
                 int newValue = value;
 
                 if (newValue < 0)
@@ -539,7 +603,7 @@ namespace Substrate
                 if (newValue > 100)
                     newValue = 100;
 
-                    _dropId = newValue;
+                _dropId = newValue;
             }
         }
 
@@ -569,12 +633,12 @@ namespace Substrate
         {
             return _durability;
         }
-
+        [CLSCompliant(false)]
         public MaterialData getData()
         {
             throw new NotImplementedException();
         }
-
+        [CLSCompliant(false)]
         public MaterialData getNewData(byte raw)
         {
             throw new NotImplementedException();
@@ -588,9 +652,9 @@ namespace Substrate
         {
             if (ID == BlockType.AIR)
                 return false;
-            if (State == BlockState.SOLID)
+            if (State == BlockState.Solid)
                 return true;
-            if (State == BlockState.FLUID || State == BlockState.NONSOLID)
+            if (State == BlockState.Fluid || State == BlockState.Non_Solid)
                 return false;
 
             return false;
@@ -598,7 +662,7 @@ namespace Substrate
 
         public bool isLiquid()
         {
-            if (State == BlockState.FLUID)
+            if (State == BlockState.Fluid)
                 return true;
             return false;
         }
@@ -647,7 +711,7 @@ namespace Substrate
                 return true;
             return false;
         }
-
+        [CLSCompliant(false)]
         public bool equals(Material material)
         {
             if (ID == material.getId())
@@ -676,7 +740,7 @@ namespace Substrate
         {
             return _blockTable[id];
         }
-
+        [CLSCompliant(false)]
         public static Material getMaterial(int id)
         {
             if (id < MAX_BLOCKS && id >= 0)
@@ -684,12 +748,12 @@ namespace Substrate
             else
                 return null;
         }
-
+        [CLSCompliant(false)]
         public static Material getMaterial(string name)
         {
             return BY_NAME[name];
         }
-
+        [CLSCompliant(false)]
         public static Material matchMaterial(string name)
         {
             Validate.notNull(name, "Name cannot be null");
@@ -700,7 +764,7 @@ namespace Substrate
             {
                 result = getMaterial(Convert.ToInt32(name));
             }
-            catch (System.FormatException ex) { }
+            catch (System.FormatException ex) { Logger.LogError(ex.ToString()); }
 
             if (result == null)
             {
@@ -736,12 +800,6 @@ namespace Substrate
             return -1;
         }
 
-        public static void AddBlock(int id, string name)
-        {
-            _blockTable[id] = new BlockInfo(id, name);
-            UpdateLookups();
-        }
-
         public static void RemoveBlock(int id)
         {
             _blockTable[id] = new BlockInfo(id);
@@ -754,6 +812,7 @@ namespace Substrate
 
         public static string nullBlockName = "Unknown Block";
         private static bool[] _isOpaqueTable;
+        public static bool isInitiated = false;
 
         public static void ResetAllData()
         {
@@ -771,6 +830,8 @@ namespace Substrate
             // ------------------------------
 
             _isOpaqueTable = new bool[MAX_BLOCKS];
+
+            isInitiated = true;
 
         }
 
@@ -852,16 +913,6 @@ namespace Substrate
                 BY_NAME.Add(formatedName, info);
 
         }
-    }
-
-    public enum GeometryType : byte
-    {
-        None,
-        Cube,
-        Slab,
-        X,
-        Crust,
-        Liquid
     }
 
     // -------------------------------------------------------------------------------------------------

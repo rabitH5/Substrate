@@ -13,7 +13,7 @@ namespace Substrate.Entities
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Health", TagType.TAG_SHORT),
             new SchemaNodeScaler("Age", TagType.TAG_SHORT),
-            new SchemaNodeCompound("Item", Item.Schema),
+            new SchemaNodeCompound("Item", ItemNbt.Schema),
         });
 
         public static string TypeId
@@ -24,7 +24,7 @@ namespace Substrate.Entities
         private short _health;
         private short _age;
 
-        private Item _item;
+        private ItemNbt _item;
 
         public int Health
         {
@@ -38,7 +38,7 @@ namespace Substrate.Entities
             set { _age = (short)value; }
         }
 
-        public Item Item 
+        public ItemNbt Item 
         {
             get { return _item; }
             set { _item = value; }
@@ -78,7 +78,7 @@ namespace Substrate.Entities
             _health = ctree["Health"].ToTagShort();
             _age = ctree["Age"].ToTagShort();
 
-            _item = new Item().LoadTree(ctree["Item"]);
+            _item = new ItemNbt().LoadTree(ctree["Item"]);
 
             return this;
         }

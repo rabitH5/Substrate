@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Substrate.Core;
+using JumpGate;
 
 namespace Substrate.Nbt
 {
@@ -158,6 +159,7 @@ namespace Substrate.Nbt
         private bool Verify (TagNode parent, TagNode tag, SchemaNode schema)
         {
             if (tag == null) {
+                Logger.LogError("Tag is Null!!");
                 return OnMissingTag(new TagEventArgs(schema.Name));
             }
 
@@ -304,6 +306,7 @@ namespace Substrate.Nbt
             TagNodeCompound ctag = tag as TagNodeCompound;
             if (ctag == null) {
                 if (!OnInvalidTagType(new TagEventArgs(schema, tag))) {
+                    Logger.LogError("Invalid tag Compound");
                     return false;
                 }
             }

@@ -512,7 +512,7 @@ namespace Substrate
 
         public bool IsSectionEmpty(int sectionY)
         {
-            return _isSectionEmpty[sectionY];
+            return false;// _isSectionEmpty[sectionY];
         }
 
         private void OnNewBlock(int x, int y, int z)

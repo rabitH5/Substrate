@@ -337,7 +337,7 @@ namespace Substrate.Core
                 BlockCoord up = TranslateCoord(key.x, key.y + 1, key.z);
                 BlockInfo upInfo = up.chunk.GetInfo(up.lx, up.ly, up.lz);
 
-                if (upInfo.State == BlockState.FLUID) {
+                if (upInfo.State == BlockState.Fluid) {
                     return up.chunk.GetData(up.lx, up.ly, up.lz) | (int)LiquidState.FALLING;
                 }
             }
@@ -361,7 +361,7 @@ namespace Substrate.Core
 
                 BlockInfo neighborInfo = neighbor.chunk.GetInfo(neighbor.lx, neighbor.ly, neighbor.lz);
 
-                if (neighborInfo.State == BlockState.FLUID) {
+                if (neighborInfo.State == BlockState.Fluid) {
                     int flow = neighbor.chunk.GetData(neighbor.lx, neighbor.ly, neighbor.lz);
                     bool flowFall = (flow & (int)LiquidState.FALLING) != 0;
 

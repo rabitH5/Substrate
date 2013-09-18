@@ -11,14 +11,14 @@ namespace Substrate
     /// <remarks>ItemCollections have a limited number of slots that depends on where they are used.</remarks>
     public class ItemCollection : INbtObject<ItemCollection>, ICopyable<ItemCollection>
     {
-        private static readonly SchemaNodeCompound _schema = Item.Schema.MergeInto(new SchemaNodeCompound("")
+        private static readonly SchemaNodeCompound _schema = ItemNbt.Schema.MergeInto(new SchemaNodeCompound("")
         {
             new SchemaNodeScaler("Slot", TagType.TAG_BYTE),
         });
 
         private static readonly SchemaNodeList _listSchema = new SchemaNodeList("", TagType.TAG_COMPOUND, _schema);
 
-        private Dictionary<int, Item> _items;
+        private Dictionary<int, ItemNbt> _items;
         private int _capacity;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Substrate
         public ItemCollection (int capacity)
         {
             _capacity = capacity;
-            _items = new Dictionary<int, Item>();
+            _items = new Dictionary<int, ItemNbt>();
         }
 
         #region Properties
@@ -56,11 +56,11 @@ namespace Substrate
         /// Gets or sets an item in a given item slot.
         /// </summary>
         /// <param name="slot">The item slot to query or insert an item or item stack into.</param>
-        public Item this[int slot]
+        public ItemNbt this[int slot]
         {
             get
             {
-                Item item;
+                ItemNbt item;
                 _items.TryGetValue(slot, out item);
                 return item;
             }
@@ -118,7 +118,7 @@ namespace Substrate
         public ItemCollection Copy ()
         {
             ItemCollection ic = new ItemCollection(_capacity);
-            foreach (KeyValuePair<int, Item> item in _items) {
+            foreach (KeyValuePair<int, ItemNbt> item in _items) {
                 ic[item.Key] = item.Value.Copy();
             }
             return ic;
@@ -138,7 +138,7 @@ namespace Substrate
 
             foreach (TagNodeCompound item in ltree) {
                 int slot = item["Slot"].ToTagByte();
-                _items[slot] = new Item().LoadTree(item);
+                _items[slot] = new ItemNbt().LoadTree(item);
             }
 
             return this;
@@ -159,7 +159,7 @@ namespace Substrate
         {
             TagNodeList list = new TagNodeList(TagType.TAG_COMPOUND);
 
-            foreach (KeyValuePair<int, Item> item in _items) {
+            foreach (KeyValuePair<int, ItemNbt> item in _items) {
                 TagNodeCompound itemtree = item.Value.BuildTree() as TagNodeCompound;
                 itemtree["Slot"] = new TagNodeByte((byte)item.Key);
                 list.Add(itemtree);

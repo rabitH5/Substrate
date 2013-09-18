@@ -202,7 +202,7 @@
     <Compile Include="Source\Entities\EntityZombie.cs" />
     <Compile Include="Source\Entity.cs" />
     <Compile Include="Source\EntityFactory.cs" />
-    <Compile Include="Source\Item.cs" />
+    <Compile Include="Source\ItemNbt.cs" />
     <Compile Include="Source\Core\NBTFile.cs" />
     <Compile Include="Source\Nbt\JSONSerializer.cs" />
     <Compile Include="Source\Player.cs" />

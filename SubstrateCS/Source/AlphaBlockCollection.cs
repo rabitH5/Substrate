@@ -374,7 +374,7 @@ namespace Substrate
             // Fluid consistency
 
             if (_autoFluid) {
-                if (info1.State == BlockState.FLUID || info2.State == BlockState.FLUID) {
+                if (info1.State == BlockState.Fluid || info2.State == BlockState.Fluid) {
                     UpdateFluid(x, y, z);
                 }
             }

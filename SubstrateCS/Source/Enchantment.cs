@@ -6,7 +6,7 @@ using Substrate.Core;
 namespace Substrate
 {
     /// <summary>
-    /// Represents an enchantment that can be applied to some <see cref="Item"/>s.
+    /// Represents an enchantment that can be applied to some <see cref="ItemNbt"/>s.
     /// </summary>
     public class Enchantment : INbtObject<Enchantment>, ICopyable<Enchantment>
     {
@@ -150,7 +150,7 @@ namespace Substrate
         {
             return "Enchantment (" + _id + " Level " + Level + ")";
         }
-
+        /*
         public static bool operator ==(Enchantment a, Enchantment b)
         {
             // If both are null, or both are same instance, return true.
@@ -172,6 +172,38 @@ namespace Substrate
         public static bool operator !=(Enchantment a, Enchantment b)
         {
             return !(a == b);
+        }
+        */
+
+        protected bool Equals(Enchantment other)
+        {
+            return _id == other._id && _level == other._level;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Enchantment) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_id.GetHashCode()*397) ^ _level.GetHashCode();
+            }
+        }
+
+        public static bool operator ==(Enchantment left, Enchantment right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Enchantment left, Enchantment right)
+        {
+            return !Equals(left, right);
         }
 
         // ---------------------------------------------------------

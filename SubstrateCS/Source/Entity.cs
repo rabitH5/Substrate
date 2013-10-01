@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Substrate.Core;
 using Substrate.Nbt;
+using UnityEngine;
+using JumpGate;
 
 namespace Substrate
 {
@@ -13,8 +15,8 @@ namespace Substrate
     {
         private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("")
         {
-            new SchemaNodeList("Pos", TagType.TAG_DOUBLE, 3),
-            new SchemaNodeList("Motion", TagType.TAG_DOUBLE, 3),
+            new SchemaNodeList("Pos", TagType.TAG_FLOAT, 3),
+            new SchemaNodeList("Motion", TagType.TAG_FLOAT, 3),
             new SchemaNodeList("Rotation", TagType.TAG_FLOAT, 2),
             new SchemaNodeScaler("FallDistance", TagType.TAG_FLOAT),
             new SchemaNodeScaler("Fire", TagType.TAG_SHORT),
@@ -123,14 +125,14 @@ namespace Substrate
         protected Entity (Entity e)
         {
             _pos = new Vector3();
-            _pos.X = e._pos.X;
-            _pos.Y = e._pos.Y;
-            _pos.Z = e._pos.Z;
+            _pos.x = e._pos.x;
+            _pos.y = e._pos.y;
+            _pos.z = e._pos.z;
 
             _motion = new Vector3();
-            _motion.X = e._motion.X;
-            _motion.Y = e._motion.Y;
-            _motion.Z = e._motion.Z;
+            _motion.x = e._motion.x;
+            _motion.y = e._motion.y;
+            _motion.z = e._motion.z;
 
             _rotation = new Orientation();
             _rotation.Pitch = e._rotation.Pitch;
@@ -154,9 +156,9 @@ namespace Substrate
         /// <param name="diffZ">The Z-offset to move by, in blocks.</param>
         public virtual void MoveBy (int diffX, int diffY, int diffZ)
         {
-            _pos.X += diffX;
-            _pos.Y += diffY;
-            _pos.Z += diffZ;
+            _pos.x += diffX;
+            _pos.y += diffY;
+            _pos.z += diffZ;
         }
 
 
@@ -184,15 +186,17 @@ namespace Substrate
 
             TagNodeList pos = ctree["Pos"].ToTagList();
             _pos = new Vector3();
-            _pos.X = pos[0].ToTagDouble();
-            _pos.Y = pos[1].ToTagDouble();
-            _pos.Z = pos[2].ToTagDouble();
+            _pos.x = pos[0].ToTagFloat();
+            _pos.y = pos[1].ToTagFloat();
+            _pos.z = pos[2].ToTagFloat();
+
+            Logger.LogInfo("THIS IS POS >>>>> " + _pos.ToString());
 
             TagNodeList motion = ctree["Motion"].ToTagList();
             _motion = new Vector3();
-            _motion.X = motion[0].ToTagDouble();
-            _motion.Y = motion[1].ToTagDouble();
-            _motion.Z = motion[2].ToTagDouble();
+            _motion.x = motion[0].ToTagFloat();
+            _motion.y = motion[1].ToTagFloat();
+            _motion.z = motion[2].ToTagFloat();
 
             TagNodeList rotation = ctree["Rotation"].ToTagList();
             _rotation = new Orientation();
@@ -228,18 +232,19 @@ namespace Substrate
         /// <returns>The root node of an Entity subtree representing the current data.</returns>
         public TagNode BuildTree ()
         {
+
             TagNodeCompound tree = new TagNodeCompound();
 
-            TagNodeList pos = new TagNodeList(TagType.TAG_DOUBLE);
-            pos.Add(new TagNodeDouble(_pos.X));
-            pos.Add(new TagNodeDouble(_pos.Y));
-            pos.Add(new TagNodeDouble(_pos.Z));
+            TagNodeList pos = new TagNodeList(TagType.TAG_FLOAT);
+            pos.Add(new TagNodeFloat(_pos.x));
+            pos.Add(new TagNodeFloat(_pos.y));
+            pos.Add(new TagNodeFloat(_pos.z));
             tree["Pos"] = pos;
 
-            TagNodeList motion = new TagNodeList(TagType.TAG_DOUBLE);
-            motion.Add(new TagNodeDouble(_motion.X));
-            motion.Add(new TagNodeDouble(_motion.Y));
-            motion.Add(new TagNodeDouble(_motion.Z));
+            TagNodeList motion = new TagNodeList(TagType.TAG_FLOAT);
+            motion.Add(new TagNodeFloat(_motion.x));
+            motion.Add(new TagNodeFloat(_motion.y));
+            motion.Add(new TagNodeFloat(_motion.z));
             tree["Motion"] = motion;
 
             TagNodeList rotation = new TagNodeList(TagType.TAG_FLOAT);

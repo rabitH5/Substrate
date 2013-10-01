@@ -534,9 +534,7 @@ namespace Substrate
             _player = new Player();
             _player.World = _name;
 
-            _player.Position.X = _spawnX;
-            _player.Position.Y = _spawnY + 1.7;
-            _player.Position.Z = _spawnZ;
+            _player.Position.Set( _spawnX, _spawnY + 1.7f, _spawnZ);
         }
 
         /// <summary>

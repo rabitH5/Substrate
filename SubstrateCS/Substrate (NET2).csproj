@@ -234,7 +234,6 @@
     <Compile Include="Source\Core\LRUCache.cs" />
     <Compile Include="Source\Core\NibbleArray.cs" />
     <Compile Include="Source\TileTick.cs" />
-    <Compile Include="Source\Vector.cs" />
     <Compile Include="Source\World.cs" />
     <Compile Include="Vendor\DotNetZip\Zlib\Crc32.cs" />
     <Compile Include="Vendor\DotNetZip\Zlib\Deflate.cs" />

@@ -247,7 +247,6 @@ namespace Substrate
             return true;
         }
 
-
         #region INBTObject<Chunk> Members
 
         /// <summary>

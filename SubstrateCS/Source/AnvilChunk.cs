@@ -259,7 +259,13 @@ namespace Substrate
 
             for (int i = 0; i < _sections.Length; i++) {
                 if (_sections[i] == null)
+                {
                     _sections[i] = new AnvilSection(i);
+                    _isSectionEmpty[i] = true;//@MW
+                }
+                else {
+                    _isSectionEmpty[i] = false;//@MW
+                }
 
                 blocksBA[i] = new FusedDataArray3(_sections[i].AddBlocks, _sections[i].Blocks);
                 dataBA[i] = _sections[i].Data;
@@ -375,6 +381,11 @@ namespace Substrate
         public AnvilChunk Copy ()
         {
             return AnvilChunk.Create(_tree.Copy());
+        }
+
+        public static AnvilChunk Copy(NbtTree tree)
+        {
+            return AnvilChunk.Create(tree.Copy());
         }
 
         #endregion
@@ -512,7 +523,7 @@ namespace Substrate
 
         public bool IsSectionEmpty(int sectionY)
         {
-            return false;// _isSectionEmpty[sectionY];
+            return _isSectionEmpty[sectionY];
         }
 
         private void OnNewBlock(int x, int y, int z)

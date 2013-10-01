@@ -205,5 +205,31 @@ namespace Substrate
         }
 
         #endregion
+
+        public bool Equals(AlphaBlockRef other)
+        {
+            return _index == other._index;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is AlphaBlockRef && Equals((AlphaBlockRef) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _index;
+        }
+
+        public static bool operator ==(AlphaBlockRef left, AlphaBlockRef right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(AlphaBlockRef left, AlphaBlockRef right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

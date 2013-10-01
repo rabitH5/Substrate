@@ -506,7 +506,9 @@ namespace Substrate
         // Geometry values
         // -------------------------------------------------------------------------------------------------
 
-        private GeometryType _geometryType = GeometryType.Cube;
+        private GeometryType _geometryType = GeometryType.GeoCode1;
+        private GeometryCodeType _geometryCodeType = GeometryCodeType.Cube;
+        private GeometryMeshType _geometryMeshType = GeometryMeshType.None;
         private AtlasType _atlas = AtlasType.Solid;
         // Cube
         private short _front = 0;
@@ -524,10 +526,29 @@ namespace Substrate
         }
 
         [CLSCompliant(false)]
+        public GeometryCodeType GeometryCode
+        {
+            get { return _geometryCodeType; }
+            set { _geometryCodeType = value; }
+        }
+
+        [CLSCompliant(false)]
+        public GeometryMeshType GeometryMesh
+        {
+            get { return _geometryMeshType; }
+            set { _geometryMeshType = value; }
+        }
+
+        [CLSCompliant(false)]
         public AtlasType Atlas
         {
             get { return _atlas; }
             set { _atlas = value; }
+        }
+
+        public bool IsAlpha
+        {
+            get { return _atlas == AtlasType.Alpha; }
         }
 
         public short Front
@@ -565,11 +586,22 @@ namespace Substrate
         // Klokkit values
         // -------------------------------------------------------------------------------------------------
 
+        private bool _isActive = false;
         private int _hitPoints = 100;
         private bool _dropItems = false;
         private PropType _dropType = PropType.Block;
         private int _dropId = 0;
         private int _dropChance = 100;
+        private bool _orientable = false;
+        private OrientationType _orientationType = OrientationType.None;
+        private bool _needGround = false;
+        private bool _needWall = false;
+
+        public bool IsActive
+        {
+            get { return _isActive; }
+            set { _isActive = value; }
+        }
 
         public int HitPoints
         {
@@ -611,6 +643,30 @@ namespace Substrate
         {
             get { return _dropChance; }
             set { _dropChance = value; }
+        }
+
+        public bool Orientable
+        {
+            get { return _orientable; }
+            set { _orientable = value; }
+        }
+         [CLSCompliant(false)]
+        public OrientationType OrientationType
+        {
+            get { return _orientationType; }
+            set { _orientationType = value; }
+        }
+
+        public bool NeedGround
+        {
+            get { return _needGround; }
+            set { _needGround = value; }
+        }
+
+        public bool NeedWall
+        {
+            get { return _needWall; }
+            set { _needWall = value; }
         }
 
         // -------------------------------------------------------------------------------------------------

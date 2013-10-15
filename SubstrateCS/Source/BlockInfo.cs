@@ -787,6 +787,11 @@ namespace Substrate
                 return null;
         }
 
+        public static BlockInfo GetBlockInfoDirect(int id)
+        {
+             return _blockTable[id];
+        }
+
         public static bool IsRegistred(int id)
         {
             return _blockTable[id].Registered;
@@ -896,15 +901,6 @@ namespace Substrate
         /// </summary>
         public static void FinishSetup()
         {
-
-            for (int i = 0; i < MAX_BLOCKS; i++)
-            {
-                if (_blockTable[i] == null)
-                {
-                    _blockTable[i] = new BlockInfo(i);
-                }
-            }
-
             FillEmptyBlockData();
 
             UpdateLookups();

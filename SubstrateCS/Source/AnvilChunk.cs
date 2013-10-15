@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Substrate
 {
-    public class AnvilChunk : IChunk, INbtObject<AnvilChunk>, ICopyable<AnvilChunk>
+    public class AnvilChunk : IChunk, INbtObject<AnvilChunk>, ICopyable<AnvilChunk>, IEquatable<AnvilChunk>
     {
         public static SchemaNodeCompound LevelSchema = new SchemaNodeCompound()
         {
@@ -530,6 +530,39 @@ namespace Substrate
         {
             // Hack for now...
             _isSectionEmpty[GetSectionNumberAtBlockY(y)] = false;
+        }
+
+        public bool Equals(AnvilChunk other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return _cz == other._cz && _cx == other._cx;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((AnvilChunk) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_cz*397) ^ _cx;
+            }
+        }
+
+        public static bool operator ==(AnvilChunk left, AnvilChunk right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(AnvilChunk left, AnvilChunk right)
+        {
+            return !Equals(left, right);
         }
 
         // ---------------------------------------------------------

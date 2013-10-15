@@ -207,6 +207,11 @@ namespace Substrate.Core
                 RemoveCacheValue(this, e);
             }
         }
+
+        internal int Capacity
+        {
+            get { return _capacity; }
+        }
     }
 
 }

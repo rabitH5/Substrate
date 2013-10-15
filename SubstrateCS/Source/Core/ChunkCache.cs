@@ -140,5 +140,15 @@ namespace Substrate.Core
         }
 
         #endregion
+
+        public int Count
+        {
+            get { return _cache.Count; }
+        }
+
+        public int Capacity
+        {
+            get { return _cache.Capacity; }
+        }
     }
 }

@@ -450,6 +450,10 @@ namespace Substrate
         {
         }
 
+        public void SetIsSectionEmpty(int sectionY, bool empty)
+        {
+        }
+
         // ---------------------------------------------------------
         //< @rabitH5
     }

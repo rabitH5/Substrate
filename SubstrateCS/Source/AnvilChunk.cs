@@ -475,7 +475,6 @@ namespace Substrate
             return _tree;
         }
 
-
         public void RebuildTree()
         {
             // BuildConditional();
@@ -486,7 +485,6 @@ namespace Substrate
         {
             return GetSection(GetSectionNumberAtBlockY(blockY));
         }
-
 
         public static int GetSectionNumberAtBlockY(int blockY)
         {
@@ -526,10 +524,9 @@ namespace Substrate
             return _isSectionEmpty[sectionY];
         }
 
-        private void OnNewBlock(int x, int y, int z)
+        public void SetIsSectionEmpty(int sectionY, bool empty)
         {
-            // Hack for now...
-            _isSectionEmpty[GetSectionNumberAtBlockY(y)] = false;
+            _isSectionEmpty[sectionY] = empty;
         }
 
         public bool Equals(AnvilChunk other)

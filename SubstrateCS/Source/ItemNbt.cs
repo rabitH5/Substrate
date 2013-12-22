@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Klokkit;
 using Substrate.Core;
 using Substrate.Nbt;
 
@@ -12,31 +13,23 @@ namespace Substrate
     {
         private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("")
         {
+            new SchemaNodeScaler("type", TagType.TAG_BYTE, SchemaOptions.CREATE_ON_MISSING),
             new SchemaNodeScaler("id", TagType.TAG_SHORT),
             new SchemaNodeScaler("Damage", TagType.TAG_SHORT),
             new SchemaNodeScaler("Count", TagType.TAG_BYTE),
-            new SchemaNodeCompound("tag", new SchemaNodeCompound("") {
-                new SchemaNodeList("ench", TagType.TAG_COMPOUND, Enchantment.Schema, SchemaOptions.OPTIONAL),
-                new SchemaNodeScaler("title", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
-                new SchemaNodeScaler("author", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
-                new SchemaNodeList("pages", TagType.TAG_STRING, SchemaOptions.OPTIONAL),
-            }, SchemaOptions.OPTIONAL),
         };
 
         private TagNodeCompound _source;
-
+        private PropType _itemType;
         private short _id;
         private byte _count;
         private short _damage;
-
-        private List<Enchantment> _enchantments;
 
         /// <summary>
         /// Constructs an empty <see cref="ItemNbt"/> instance.
         /// </summary>
         public ItemNbt ()
         {
-            _enchantments = new List<Enchantment>();
             _source = new TagNodeCompound();
         }
 
@@ -44,20 +37,19 @@ namespace Substrate
         /// Constructs an <see cref="ItemNbt"/> instance representing the given item id.
         /// </summary>
         /// <param name="id">An item id.</param>
-        public ItemNbt (int id)
+        public ItemNbt (PropType itemtype, int id)
             : this()
         {
+            _itemType = itemtype;
             _id = (short)id;
         }
 
         #region Properties
 
-        /// <summary>
-        /// Gets an <see cref="ItemInfo"/> entry for this item's type.
-        /// </summary>
-        public ItemInfo Info
+        public PropType ItemType
         {
-            get { return ItemInfo.ItemTable[_id]; }
+            get { return _itemType; }
+            set { _itemType = value; }
         }
 
         /// <summary>
@@ -89,14 +81,6 @@ namespace Substrate
         }
 
         /// <summary>
-        /// Gets the list of <see cref="Enchantment"/>s applied to this item.
-        /// </summary>
-        public IList<Enchantment> Enchantments
-        {
-            get { return _enchantments; }
-        }
-
-        /// <summary>
         /// Gets the source <see cref="TagNodeCompound"/> used to create this <see cref="ItemNbt"/> if it exists.
         /// </summary>
         public TagNodeCompound Source
@@ -120,13 +104,10 @@ namespace Substrate
         public ItemNbt Copy ()
         {
             ItemNbt item = new ItemNbt();
+            item.ItemType = _itemType;
             item._id = _id;
             item._count = _count;
             item._damage = _damage;
-
-            foreach (Enchantment e in _enchantments) {
-                item._enchantments.Add(e.Copy());
-            }
 
             if (_source != null) {
                 item._source = _source.Copy() as TagNodeCompound;
@@ -147,22 +128,11 @@ namespace Substrate
                 return null;
             }
 
-            _enchantments.Clear();
-
+           byte type =   ctree["type"].ToTagByte();
+            _itemType = (PropType) type;
             _id = ctree["id"].ToTagShort();
             _count = ctree["Count"].ToTagByte();
             _damage = ctree["Damage"].ToTagShort();
-
-            if (ctree.ContainsKey("tag")) {
-                TagNodeCompound tagtree = ctree["tag"].ToTagCompound();
-                if (tagtree.ContainsKey("ench")) {
-                    TagNodeList enchList = tagtree["ench"].ToTagList();
-
-                    foreach (TagNode tag in enchList) {
-                        _enchantments.Add(new Enchantment().LoadTree(tag));
-                    }
-                }
-            }
 
             _source = ctree.Copy() as TagNodeCompound;
 
@@ -183,25 +153,10 @@ namespace Substrate
         public TagNode BuildTree ()
         {
             TagNodeCompound tree = new TagNodeCompound();
+            tree["type"] = new TagNodeByte((byte) _itemType);
             tree["id"] = new TagNodeShort(_id);
             tree["Count"] = new TagNodeByte(_count);
             tree["Damage"] = new TagNodeShort(_damage);
-
-            if (_enchantments.Count > 0) {
-                TagNodeList enchList = new TagNodeList(TagType.TAG_COMPOUND);
-                foreach (Enchantment e in _enchantments) {
-                    enchList.Add(e.BuildTree());
-                }
-
-                TagNodeCompound tagtree = new TagNodeCompound();
-                tagtree["ench"] = enchList;
-
-                if (_source != null && _source.ContainsKey("tag")) {
-                    tagtree.MergeFrom(_source["tag"].ToTagCompound());
-                }
-
-                tree["tag"] = tagtree;
-            }
 
             if (_source != null) {
                 tree.MergeFrom(_source);
@@ -223,38 +178,12 @@ namespace Substrate
 
         public override string ToString()
         {
-            return "Item ( Id:" + _id + " Damage:" + _damage + " Count:" + _count + " Enchantments:" + _enchantments.Count + ")";
+            return "Item ( Type: "+(PropType)_itemType + " Id:" + _id + " Damage:" + _damage + " Count:" + _count + ")";
         }
-        /*
-        public static bool operator ==(ItemNbt a, ItemNbt b)
-        {
-            // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
-            {
-                return true;
-            }
-
-            // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
-                return false;
-            }
-
-            return a._id == b._id &&
-                   a._damage == b._damage &&
-                   a._enchantments.Count == 0 &&
-                   b.Enchantments.Count == 0;
-        }
-
-        public static bool operator !=(ItemNbt a, ItemNbt b)
-        {
-            return !(a == b);
-        }
-        */
 
         protected bool Equals(ItemNbt other)
         {
-            return _id == other._id && _damage == other._damage && _enchantments.Count == 0 && other.Enchantments.Count == 0;
+            return _itemType.Equals(other._itemType) && _id == other._id && _count == other._count && _damage == other._damage;
         }
 
         public override bool Equals(object obj)
@@ -270,8 +199,9 @@ namespace Substrate
             unchecked
             {
                 int hashCode = _id.GetHashCode();
+                hashCode = (hashCode*397) ^ _count.GetHashCode();
                 hashCode = (hashCode*397) ^ _damage.GetHashCode();
-                hashCode = (hashCode*397) ^ (_enchantments != null ? _enchantments.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ _itemType.GetHashCode();
                 return hashCode;
             }
         }

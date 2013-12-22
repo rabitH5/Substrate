@@ -355,11 +355,6 @@ namespace Substrate
             return _chunk.GetSection(y); ;
         }
 
-        public bool IsSectionEmpty(int y)
-        {
-            return _chunk.IsSectionEmpty(y);
-        }
-
         public bool IsSectionVisible(int sectionY)
         {
             return _chunk.IsSectionVisible(sectionY);
@@ -368,6 +363,16 @@ namespace Substrate
         public void SetIsSectionVisible(int sectionY, bool visible)
         {
             _chunk.SetIsSectionVisible(sectionY, visible);
+        }
+
+        public bool IsSectionEmpty(int y)
+        {
+            return _chunk.IsSectionEmpty(y);
+        }
+
+        public void SetIsSectionEmpty(int sectionY, bool empty)
+        {
+            _chunk.SetIsSectionEmpty(sectionY, empty);
         }
 
         // ---------------------------------------------------------

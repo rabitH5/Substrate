@@ -68,6 +68,8 @@ namespace Substrate.Core
 
         void SetIsSectionVisible(int sectionY, bool visible);
 
+        void SetIsSectionEmpty(int sectionY, bool empty);
+
         // ---------------------------------------------------------
         //< @rabitH5
     }

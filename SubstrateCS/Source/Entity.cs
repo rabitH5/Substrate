@@ -5,6 +5,7 @@ using Substrate.Core;
 using Substrate.Nbt;
 using UnityEngine;
 using JumpGate;
+using org.bukkit;
 
 namespace Substrate
 {
@@ -189,8 +190,6 @@ namespace Substrate
             _pos.x = pos[0].ToTagFloat();
             _pos.y = pos[1].ToTagFloat();
             _pos.z = pos[2].ToTagFloat();
-
-            Logger.LogInfo("THIS IS POS >>>>> " + _pos.ToString());
 
             TagNodeList motion = ctree["Motion"].ToTagList();
             _motion = new Vector3();
